@@ -1,0 +1,51 @@
+import network
+import urequests
+import time 
+
+# Initier WiFi
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+
+# Autorisation
+ssid = 'MiniPhone'
+password = 'adgang4iPhone!'
+
+#wlan.scan()
+wlan.connect(ssid, password)
+
+while True:
+  
+    # API: hent data fra EnergiNet
+    url = 'https://api.energidataservice.dk/dataset/PowerSystemRightNow?limit=5'
+
+    response = urequests.get(url)
+    result = response.json()
+
+    #records = result.get('records', [])
+    #for record in records:
+     # print(record['GridCompanyName'])
+      
+      
+    records = result.get('records', [])
+
+    # Print værdier
+    for record in records:
+        tidspunkt = (record['Minutes1DK'])
+        dele = tidspunkt.split("T")
+        tidspunkt = dele[1]
+        solenergi = (record['SolarPower'])
+        vindenergi = (record['OffshoreWindPower']) + (record['OnshoreWindPower'])
+
+    print("Solenergi:", solenergi) 
+    print("Vindenergi:", vindenergi)
+
+
+    if solenergi >= vindenergi:
+        print ("Lige nu", tidspunkt ,"producerer vi mere SOLENERGI")
+        
+    if vindenergi >= solenergi:
+        print ("Lige nu", tidspunkt ,"producerer vi mere VINDENERGI")
+        
+    time.sleep(60)
+
+
