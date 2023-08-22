@@ -30,21 +30,30 @@ while True:
 
     # Print værdier
     for record in records:
-        tidspunkt = (record['Minutes1DK'])
+        tidspunkt = record['Minutes1DK']
         dele = tidspunkt.split("T")
         tidspunkt = dele[1]
-        solenergi = (record['SolarPower'])
-        vindenergi = (record['OffshoreWindPower']) + (record['OnshoreWindPower'])
+        solenergi = record['SolarPower']
+        vindenergi = record['OffshoreWindPower'] + record['OnshoreWindPower']
+        forssileenergi= record ['ProductionGe100MW'] + record ['ProductionLt100MW']
+        
 
     print("Solenergi:", solenergi) 
     print("Vindenergi:", vindenergi)
+    print ("Forssile Brændstoffer: ", forssileenergi)
 
 
-    if solenergi >= vindenergi:
-        print ("Lige nu", tidspunkt ,"producerer vi mere SOLENERGI")
+    if solenergi <= vindenergi:
+        print ("Lige nu", tidspunkt ,"producerer vi mere VINDENERGI end solenergi")
         
-    if vindenergi >= solenergi:
-        print ("Lige nu", tidspunkt ,"producerer vi mere VINDENERGI")
+    else:
+        print ("Lige nu", tidspunkt ,"producerer vi mere SOLENERGI end vindenergi")
+        
+    if (solenergi + vindenergi) >= forssileenergi:
+        print("Vi producere mest GRØN energi")
+        
+    else:
+        print ("Vi producere mest SORT energi")
         
     time.sleep(60)
 
